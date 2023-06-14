@@ -1,0 +1,17 @@
+{
+    "name": "Logic",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5ea5f21010507c14aa1d5db7150c8fd7",
+        "GUID:a6bea2037b0ce0448a1376a149dbb93d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
