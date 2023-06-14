@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
+using Newtonsoft.Json;
+
 
 namespace Game.Data
 {
