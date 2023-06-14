@@ -12,6 +12,7 @@ namespace Game.UI
         [SerializeField] private TextMeshProUGUI companyNameTmp;
         [SerializeField] private TextMeshProUGUI companyDescriptionTmp;
         [SerializeField] private TextMeshProUGUI incomeValueTmp;
+        [SerializeField] private TextMeshProUGUI expensesValueTmp;
 
         private CompanyModel _company;
 
@@ -23,16 +24,19 @@ namespace Game.UI
             _company.CompanyName.OnChange += UpdateName;
             _company.CompanyDescription.OnChange += UpdateDescription;
             _company.Income.OnChange += UpdateIncome;
-            _company.Expense.OnChange += UpdateIncome;
+            _company.Expense.OnChange += UpdateExpenses;
 
             InitUpdate();
         }
+
+
 
         private void InitUpdate()
         {
             UpdateName(_company.CompanyName.Value);
             UpdateDescription(_company.CompanyDescription.Value);
-            UpdateIncome(0);
+            UpdateIncome(_company.Income.Value);
+            UpdateExpenses(_company.Expense.Value);
         }
 
 
@@ -41,9 +45,9 @@ namespace Game.UI
             _company.CompanyName.OnChange -= UpdateName;
             _company.CompanyDescription.OnChange -= UpdateDescription;
             _company.Income.OnChange -= UpdateIncome;
-            _company.Expense.OnChange -= UpdateIncome;
+            _company.Expense.OnChange -= UpdateExpenses;
         }
-       
+
         private void UpdateName(string obj)
         {
             companyNameTmp.text = obj;
@@ -54,10 +58,8 @@ namespace Game.UI
             companyDescriptionTmp.text = obj;
         }
 
-        private void UpdateIncome(float obj)
+        private void UpdateIncome(float delta)
         {
-            var delta = _company.Income.Value - _company.Expense.Value;
-
             if (delta >= 0)
             {
                 incomeValueTmp.text = $"<color=#46FF2A>+{delta.ToMoneyString()}";
@@ -66,6 +68,20 @@ namespace Game.UI
             else
             {
                 incomeValueTmp.text = $"<color=#F35236>{delta.ToMoneyString()}";
+            }
+        }
+
+        private void UpdateExpenses(float delta)
+        {
+            delta *= -1;
+            if (delta >= 0)
+            {
+                expensesValueTmp.text = $"<color=#46FF2A>+{delta.ToMoneyString()}";
+            }
+
+            else
+            {
+                expensesValueTmp.text = $"<color=#F35236>{delta.ToMoneyString()}";
             }
         }
 

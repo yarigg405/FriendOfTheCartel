@@ -9,6 +9,7 @@ namespace Game.UI
     internal sealed class AccountView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI balanceTmp;
+        [SerializeField] private TextMeshProUGUI lastIncomeTmp;
         [SerializeField] private TextMeshProUGUI accountNameTmp;
 
         private AccountModel _account;
@@ -36,8 +37,7 @@ namespace Game.UI
 
         private void UpdateBalance(float obj)
         {
-            balanceTmp.text = obj.ToMoneyString();
-                
+            balanceTmp.text = obj.ToMoneyString();                
         }
 
         public void ClickOnOpen()

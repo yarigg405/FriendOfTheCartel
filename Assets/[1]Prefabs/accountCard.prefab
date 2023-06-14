@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   balanceTmp: {fileID: 574865513258807263}
+  lastIncomeTmp: {fileID: 0}
   accountNameTmp: {fileID: 574865512279430422}
 --- !u!114 &6516136768869409005
 MonoBehaviour:

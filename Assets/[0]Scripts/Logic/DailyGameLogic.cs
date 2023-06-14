@@ -36,7 +36,7 @@ namespace Yarigg
 
         private void NextDay()
         {
-            var accounts = _playerData.GetAccounts();
+            var accounts = _playerData.GetAccounts();           
 
             foreach (var company in _playerData.GetCompanies())
             {
