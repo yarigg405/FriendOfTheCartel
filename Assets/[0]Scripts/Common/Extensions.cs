@@ -9,7 +9,20 @@ namespace Game.Staff
     {
         public static string ToMoneyString(this float value)
         {
-            return value.ToString("N1", CultureInfo.CreateSpecificCulture("sv-SE")) + "$";
+            return value.ToString("N0", CultureInfo.CreateSpecificCulture("sv-SE")) + "$";
+        }
+
+        public static string ToSignedColorString(this float value)
+        {
+            if (value < 0)
+            {
+                return $"<color=#F35236>{value.ToMoneyString()}";
+            }
+
+            else
+            {
+                return $"<color=#46FF2A>+{value.ToMoneyString()}";
+            }
         }
 
     }

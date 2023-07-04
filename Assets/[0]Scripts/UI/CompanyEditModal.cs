@@ -1,10 +1,10 @@
 using Game.Data;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Yrr.UI;
 using Yrr.Utils;
+
 
 namespace Game.UI
 {
@@ -13,11 +13,12 @@ namespace Game.UI
         [SerializeField] private TMP_InputField companyNameIf;
         [SerializeField] private TMP_InputField companyDescriptionIf;
 
+        [SerializeField] private TMP_InputField companyCostIf;
+        [SerializeField] private TMP_Dropdown accountDd;
+
         [SerializeField] private TMP_InputField incomeIf;
         [SerializeField] private TMP_InputField expensesIf;
-
-        [SerializeField] private TMP_Dropdown incomeAccountDd;
-        [SerializeField] private TMP_Dropdown expensesAccoutDd;
+        [SerializeField] private TMP_InputField cleaningIf;
 
         [SerializeField] private Button deleteBtn;
         private CompanyModel _company;
@@ -25,16 +26,13 @@ namespace Game.UI
 
         protected override void OnShow(object args)
         {
-            incomeAccountDd.ClearOptions();
-            expensesAccoutDd.ClearOptions();
+            accountDd.ClearOptions();
             foreach (var acc in PlayerData.CurrentData.GetAccounts())
             {
-                incomeAccountDd.options.Add(new TMP_Dropdown.OptionData(acc.AccountName.Value));
-                expensesAccoutDd.options.Add(new TMP_Dropdown.OptionData(acc.AccountName.Value));
+                accountDd.options.Add(new TMP_Dropdown.OptionData(acc.AccountName.Value));
             }
-            var emptyOption = new TMP_Dropdown.OptionData("");
-            incomeAccountDd.options.Add(emptyOption);
-            expensesAccoutDd.options.Add(emptyOption);
+            var emptyOption = new TMP_Dropdown.OptionData("New account");
+            accountDd.options.Add(emptyOption);
 
 
             if (args != null)
@@ -47,22 +45,29 @@ namespace Game.UI
                     companyNameIf.text = _company.CompanyName.Value;
                     companyDescriptionIf.text = _company.CompanyDescription.Value;
 
+                    companyCostIf.text = _company.CompanyCost.Value.ToIntString();
+                    accountDd.value = _company.AccountNum;
+
                     incomeIf.text = _company.Income.Value.ToIntString();
                     expensesIf.text = _company.Expense.Value.ToIntString();
-
-                    incomeAccountDd.value = _company.IncomeAccountNum;
-                    expensesAccoutDd.value = _company.ExpenseAccountNum;
+                    cleaningIf.text = _company.Cleaning.Value.ToIntString();
                 }
             }
+
             else
             {
+                _company = null;
                 deleteBtn.interactable = false;
 
-                companyNameIf.text = string.Empty;
-                companyDescriptionIf.text = string.Empty;
+                companyNameIf.text = "";
+                companyDescriptionIf.text = "";
 
-                incomeIf.text = string.Empty;
-                expensesIf.text = string.Empty;
+                companyCostIf.text = "";
+                accountDd.value = accountDd.options.Count;
+
+                incomeIf.text = "";
+                expensesIf.text = "";
+                cleaningIf.text = "";
             }
         }
 
@@ -70,47 +75,38 @@ namespace Game.UI
         {
             var newName = companyNameIf.text;
             var newDescr = companyDescriptionIf.text;
-            var newIncome = float.Parse(incomeIf.text);
-            var newExpenses = float.Parse(expensesIf.text);
 
-            var incAccValue = incomeAccountDd.value;
-            var expAccValue = expensesAccoutDd.value;
+            var newCost = companyCostIf.text.Length > 0 ? float.Parse(companyCostIf.text) : 0;
+            var accountNum = accountDd.value;
+
+            var newIncome = incomeIf.text.Length > 0 ? float.Parse(incomeIf.text) : 0;
+            var newExpenses = expensesIf.text.Length > 0 ? float.Parse(expensesIf.text) : 0;
+            var newCleaning = cleaningIf.text.Length > 0 ? float.Parse(cleaningIf.text) : 0;
 
 
             if (_company == null)
             {
                 _company = new CompanyModel();
-
-                _company.CompanyName.Value = newName;
-                _company.CompanyDescription.Value = newDescr;
-                _company.Income.Value = newIncome;
-                _company.Expense.Value = newExpenses;
-                if (incAccValue < incomeAccountDd.options.Count)
-                {
-                    _company.IncomeAccountNum = incAccValue;
-                }
-                if (expAccValue < expensesAccoutDd.options.Count)
-                {
-                    _company.ExpenseAccountNum = expAccValue;
-                }
-
                 PlayerData.CurrentData.AddCompany(_company);
             }
+
+            _company.CompanyName.Value = newName;
+            _company.CompanyDescription.Value = newDescr;
+
+            _company.CompanyCost.Value = newCost;
+            if (accountNum < accountDd.options.Count - 1)
+                _company.AccountNum = accountNum;
             else
             {
-                _company.CompanyName.Value = newName;
-                _company.CompanyDescription.Value = newDescr;
-                _company.Income.Value = newIncome;
-                _company.Expense.Value = newExpenses;
-                if (incAccValue < incomeAccountDd.options.Count)
-                {
-                    _company.IncomeAccountNum = incAccValue;
-                }
-                if (expAccValue < expensesAccoutDd.options.Count)
-                {
-                    _company.ExpenseAccountNum = expAccValue;
-                }
+                var newAcc = new AccountModel();
+                newAcc.AccountName.Value = companyNameIf.text;
+                PlayerData.CurrentData.AddAccount(newAcc);
+                _company.AccountNum = accountNum;
             }
+
+            _company.Income.Value = newIncome;
+            _company.Expense.Value = newExpenses;
+            _company.Cleaning.Value = newCleaning;
 
             PlayerData.CurrentData.SaveData();
             OnShow(_company);

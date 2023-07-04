@@ -8,7 +8,7 @@ namespace Game.UI
 {
     internal sealed class CompanyViewAdapter : MonoBehaviour
     {
-        [SerializeField] private CompanyView prefab;
+        [SerializeField] private CompanyCard prefab;
         [SerializeField] private RectTransform container;
 
         private void Start()

@@ -7,7 +7,7 @@ namespace Yarigg
 {
     internal sealed class DailyGameLogic : MonoBehaviour
     {
-        private PlayerData _playerData; 
+        private PlayerData _playerData;
 
         private void Start()
         {
@@ -36,15 +36,47 @@ namespace Yarigg
 
         private void NextDay()
         {
-            var accounts = _playerData.GetAccounts();           
+            HandleDailyIncome();
+            HandleDailyCleaning();
+            HandleDailyTransactions();
+        }
+
+        private void HandleDailyIncome()
+        {
+            var accounts = _playerData.GetAccounts();
 
             foreach (var company in _playerData.GetCompanies())
             {
-                var incomeAcc = accounts.ElementAt(company.IncomeAccountNum);
-                incomeAcc.AccountBalance += company.Income;
+                var account = accounts.ElementAt(company.AccountNum);
+                var incomeValue = company.Income.Value - company.Expense.Value;
+                account.AccountBalance += incomeValue;
+            }
+        }
 
-                var expensesAcc = accounts.ElementAt(company.ExpenseAccountNum);
-                expensesAcc.AccountBalance -= company.Expense;
+        private void HandleDailyCleaning()
+        {
+            var accounts = _playerData.GetAccounts();
+            var cashAccount = accounts.ElementAt(1);
+
+            foreach (var company in _playerData.GetCompanies())
+            {
+                var companyAccount = accounts.ElementAt(company.AccountNum);
+
+                var cleaningMoneyAmount = company.Cleaning.Value;
+                cashAccount.AccountBalance -= cleaningMoneyAmount;
+                companyAccount.AccountBalance += cleaningMoneyAmount;
+            }
+        }
+
+        private void HandleDailyTransactions()
+        {
+            foreach (var transaction in _playerData.GetTransactions())
+            {
+                var fromAccount = _playerData._accounts[transaction.ExpenseAccountNum.Value];
+                var toAccount = _playerData._accounts[transaction.IncomeAccountNum.Value];
+
+                fromAccount.AccountBalance.Value -= transaction.TransactionAmount.Value;
+                toAccount.AccountBalance.Value += transaction.TransactionAmount.Value;
             }
         }
     }

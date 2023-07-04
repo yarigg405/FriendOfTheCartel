@@ -40,7 +40,7 @@ namespace Game.UI
         public void ClickOnSave()
         {
             var newName = nameIf.text;
-            var newBalance = float.Parse(balanceIf.text);
+            var newBalance = balanceIf.text.Length > 0 ? float.Parse(balanceIf.text) : 0;
 
             if (_account != null)
             {

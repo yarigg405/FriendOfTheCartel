@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-
+using Yrr.Utils;
+using Newtonsoft.Json.Bson;
 
 namespace Game.Data
 {
@@ -36,6 +37,10 @@ namespace Game.Data
         }
 
 
+       /// <summary>
+       /// /////////////////////
+       /// </summary>
+
 
         public List<CompanyModel> _companies = new();
         public event Action<CompanyModel> OnCompanyAdded;
@@ -64,8 +69,62 @@ namespace Game.Data
         }
 
 
+        /// <summary>
+        /// /////////////////
+        /// </summary>
+        /// 
+
+        public List<TransactionModel> _transactions= new();
+        public event Action<TransactionModel> OnTransactionAdded;
+        public event Action<TransactionModel > OnTransactionRemoved;
+
+        public void AddTransaction(TransactionModel transaction)
+        {
+            _transactions.Add(transaction);
+            OnTransactionAdded?.Invoke(transaction);
+            SaveData();
+        }
+
+        public void RemoveTransaction(TransactionModel transaction)
+        {
+            if (_transactions.Remove(transaction))
+            {
+                OnTransactionRemoved?.Invoke(transaction);
+                SaveData();
+            }
+        }
+
+        public IEnumerable<TransactionModel> GetTransactions()
+        {
+            return _transactions;
+        }
+
+
         private void Init()
         {
+            var cleanAccount = new AccountModel
+            {
+                AccountName = new ReactiveValue<string>("Clean"),
+                AccountBalance = new ReactiveFloat(0),
+            };
+
+            var cashAccount = new AccountModel
+            {
+                AccountName = new ReactiveValue<string>("Cash"),
+                AccountBalance = new ReactiveFloat(10_000_000),
+            };
+
+            _accounts.Add(cleanAccount);
+            _accounts.Add(cashAccount);
+        }
+
+
+        public void RecalculateIncome()
+        {
+            foreach (var account in _accounts)
+            {
+                account.RecalculateIncome();
+            }
         }
     }
 
@@ -91,12 +150,6 @@ namespace Game.Data
 
 
 
-        public PlayerData()
-        {
-            Init();
-        }
-
-
         public static void LoadData()
         {
             var str = PlayerPrefs.GetString(key);
@@ -106,7 +159,6 @@ namespace Game.Data
 
                 if (json == null)
                 {
-
                     _currData = new PlayerData();
                     _currData.SaveData();
                 }
@@ -118,6 +170,7 @@ namespace Game.Data
             else
             {
                 _currData = new PlayerData();
+                _currData.Init();
                 _currData.SaveData();
             }
             _canSave = true;

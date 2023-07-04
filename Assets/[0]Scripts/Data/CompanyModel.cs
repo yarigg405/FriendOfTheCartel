@@ -7,20 +7,14 @@ namespace Game.Data
     [Serializable]
     public sealed class CompanyModel
     {
-        public ReactiveValue<string> CompanyName;
-        public ReactiveValue<string> CompanyDescription;
-        public ReactiveFloat Income;
-        public ReactiveFloat Expense;
+        public ReactiveValue<string> CompanyName = new ReactiveValue<string>("");
+        public ReactiveValue<string> CompanyDescription = new ReactiveValue<string>("");
 
-        public int IncomeAccountNum;
-        public int ExpenseAccountNum;
+        public ReactiveFloat CompanyCost = new ReactiveFloat(0);
+        public ReactiveFloat Income = new ReactiveFloat(0);
+        public ReactiveFloat Expense = new ReactiveFloat(0);
+        public ReactiveFloat Cleaning = new ReactiveFloat(0);
 
-        public CompanyModel()
-        {
-            CompanyName = new ReactiveValue<string>("");
-            CompanyDescription = new ReactiveValue<string>("");
-            Income = new ReactiveFloat(0);
-            Expense = new ReactiveFloat(0);
-        }
+        public int AccountNum;
     }
 }

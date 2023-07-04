@@ -17,5 +17,10 @@ namespace Game.UI
             accountsAdapter.Show(PlayerData.CurrentData.GetAccounts());
             companiesAdapter.Show(PlayerData.CurrentData.GetCompanies());
         }
+
+        public void ClickOnRecalculate()
+        {
+            PlayerData.CurrentData.RecalculateIncome();
+        }
     }
 }
