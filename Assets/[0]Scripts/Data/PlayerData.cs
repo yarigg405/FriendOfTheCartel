@@ -37,9 +37,9 @@ namespace Game.Data
         }
 
 
-       /// <summary>
-       /// /////////////////////
-       /// </summary>
+        /// <summary>
+        /// /////////////////////
+        /// </summary>
 
 
         public List<CompanyModel> _companies = new();
@@ -74,9 +74,9 @@ namespace Game.Data
         /// </summary>
         /// 
 
-        public List<TransactionModel> _transactions= new();
+        public List<TransactionModel> _transactions = new();
         public event Action<TransactionModel> OnTransactionAdded;
-        public event Action<TransactionModel > OnTransactionRemoved;
+        public event Action<TransactionModel> OnTransactionRemoved;
 
         public void AddTransaction(TransactionModel transaction)
         {
